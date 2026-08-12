@@ -221,24 +221,15 @@ password
 
 }catch(error){
 
-console.error(error);
+console.error("FIREBASE LOGIN ERROR:", error);
 
 message.className="error";
 
-if(
-error.code ===
-"auth/invalid-credential"
-){
-
-message.textContent=
-"❌ Incorrect email or password.";
-
-}else{
-
-message.textContent=
-"❌ Login failed. Please try again.";
-
-}
+message.innerHTML =
+"❌ Error: " +
+error.code +
+"<br>" +
+(error.message || "");
 
 }
 

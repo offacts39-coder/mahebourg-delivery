@@ -1,0 +1,1126 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport"
+content="width=device-width, initial-scale=1.0">
+
+<meta name="theme-color"
+content="#111827">
+
+<title>Mahebourg Delivery Admin</title>
+
+<style>
+
+*{
+box-sizing:border-box;
+}
+
+body{
+margin:0;
+font-family:Arial,sans-serif;
+background:#f3f4f6;
+color:#17202a;
+}
+
+header{
+background:#111827;
+color:white;
+padding:20px;
+}
+
+header h2{
+margin:0 0 5px;
+}
+
+header p{
+margin:0;
+font-size:13px;
+opacity:.8;
+}
+
+main{
+max-width:700px;
+margin:auto;
+padding:15px;
+}
+
+.card{
+background:white;
+border-radius:16px;
+padding:16px;
+margin-bottom:14px;
+box-shadow:0 3px 12px rgba(0,0,0,.08);
+}
+
+.order-header{
+display:flex;
+justify-content:space-between;
+gap:10px;
+align-items:center;
+}
+
+.order-id{
+font-size:18px;
+font-weight:bold;
+}
+
+.status{
+display:inline-block;
+padding:6px 9px;
+border-radius:20px;
+background:#fef3c7;
+color:#92400e;
+font-size:11px;
+font-weight:bold;
+}
+
+.status.accepted{
+background:#dcfce7;
+color:#166534;
+}
+
+.status.assigned{
+background:#dbeafe;
+color:#1d4ed8;
+}
+
+.status.delivered{
+background:#dcfce7;
+color:#166534;
+}
+
+.info{
+background:#f8fafc;
+border-radius:10px;
+padding:11px;
+margin:10px 0;
+line-height:1.55;
+font-size:14px;
+}
+
+label{
+display:block;
+font-size:13px;
+font-weight:bold;
+margin:12px 0 6px;
+}
+
+select,
+button{
+width:100%;
+padding:13px;
+border-radius:10px;
+border:1px solid #d1d5db;
+font-size:15px;
+}
+
+button{
+border:0;
+background:#16a34a;
+color:white;
+font-weight:bold;
+margin-top:8px;
+cursor:pointer;
+}
+
+.blue{
+background:#2563eb;
+}
+
+.orange{
+background:#ea580c;
+}
+
+.red{
+background:#dc2626;
+}
+
+.gray{
+background:#4b5563;
+}
+
+.topbar{
+display:flex;
+gap:8px;
+margin-bottom:15px;
+}
+
+.topbar button{
+margin:0;
+}
+
+.empty{
+text-align:center;
+padding:30px 15px;
+color:#6b7280;
+}
+
+.loading{
+text-align:center;
+padding:20px;
+}
+
+.small{
+font-size:11px;
+color:#6b7280;
+}
+
+hr{
+border:0;
+border-top:1px solid #e5e7eb;
+margin:15px 0;
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<header>
+
+<h2>👨‍💼 Mahebourg Delivery</h2>
+
+<p>Admin Dashboard • Rider Assignment</p>
+
+</header>
+
+
+<main>
+
+
+<div class="topbar">
+
+<button
+class="blue"
+onclick="loadOrders()"
+>
+🔄 Refresh
+</button>
+
+<button
+class="gray"
+onclick="showAll()"
+>
+📦 All Orders
+</button>
+
+</div>
+
+
+<div id="summary"
+class="card"
+>
+
+<h3>
+📊 Dashboard
+</h3>
+
+<div id="summaryText">
+Loading...
+</div>
+
+</div>
+
+
+<div id="orders">
+
+<div class="loading">
+Loading orders...
+</div>
+
+</div>
+
+
+</main>
+
+
+
+<script type="module">
+
+
+/* =====================================
+   FIREBASE
+===================================== */
+
+import {
+initializeApp
+}
+from
+"https://www.gstatic.com/firebasejs/12.1.0/firebase-app.js";
+
+
+import {
+getDatabase,
+ref,
+onValue,
+update
+}
+from
+"https://www.gstatic.com/firebasejs/12.1.0/firebase-database.js";
+
+
+
+const firebaseConfig = {
+
+apiKey:
+"AIzaSyBZzPmYBJNqio_IDrPn6abTVFoci-7GKt",
+
+authDomain:
+"delivery-5d936.firebaseapp.com",
+
+databaseURL:
+"https://delivery-5d936-default-rtdb.asia-southeast1.firebasedatabase.app",
+
+projectId:
+"delivery-5d936",
+
+storageBucket:
+"delivery-5d936.firebasestorage.app",
+
+messagingSenderId:
+"980186352754",
+
+appId:
+"1:980186352754:web:02785a4144fd6f174746eb"
+
+};
+
+
+const app =
+initializeApp(firebaseConfig);
+
+const db =
+getDatabase(app);
+
+
+const ordersRef =
+ref(db,"orders");
+
+
+let allOrders = [];
+
+
+
+/* =====================================
+   LOAD ORDERS
+===================================== */
+
+window.loadOrders = function(){
+
+onValue(
+
+ordersRef,
+
+snapshot=>{
+
+const data =
+snapshot.val() || {};
+
+
+allOrders =
+
+Object.entries(data)
+
+.map(
+
+([key,order])=>({
+
+key:key,
+
+...order
+
+})
+
+)
+
+.sort(
+
+(a,b)=>
+
+new Date(
+b.createdAt || 0
+)
+
+-
+
+new Date(
+a.createdAt || 0
+)
+
+);
+
+
+renderOrders(
+allOrders
+);
+
+},
+
+error=>{
+
+console.error(error);
+
+document.getElementById(
+"orders"
+).innerHTML = `
+
+<div class="card">
+
+<h3>❌ Firebase Error</h3>
+
+<p>
+Could not load orders.
+Please check Firebase Database Rules.
+</p>
+
+</div>
+
+`;
+
+}
+
+);
+
+};
+
+
+
+/* =====================================
+   SHOW ALL
+===================================== */
+
+window.showAll = function(){
+
+renderOrders(
+allOrders
+);
+
+};
+
+
+
+/* =====================================
+   RENDER ORDERS
+===================================== */
+
+function renderOrders(orders){
+
+const container =
+document.getElementById(
+"orders"
+);
+
+
+const newCount =
+orders.filter(
+o =>
+!o.status ||
+o.status === "New"
+).length;
+
+
+const acceptedCount =
+orders.filter(
+o =>
+o.status === "Accepted"
+).length;
+
+
+const assignedCount =
+orders.filter(
+o =>
+o.rider
+).length;
+
+
+const deliveredCount =
+orders.filter(
+o =>
+o.status === "Delivered"
+).length;
+
+
+document.getElementById(
+"summaryText"
+).innerHTML = `
+
+<b>📦 Total:</b> ${orders.length}
+
+&nbsp;&nbsp;
+
+<b>🆕 New:</b> ${newCount}
+
+<br><br>
+
+<b>🛵 Assigned:</b> ${assignedCount}
+
+&nbsp;&nbsp;
+
+<b>🚚 Delivered:</b> ${deliveredCount}
+
+`;
+
+
+if(!orders.length){
+
+container.innerHTML = `
+
+<div class="card empty">
+
+<h3>
+No orders yet
+</h3>
+
+<p>
+Customer orders will appear here.
+</p>
+
+</div>
+
+`;
+
+return;
+
+}
+
+
+container.innerHTML =
+
+orders.map(
+
+order => renderOrder(order)
+
+).join("");
+
+}
+
+
+
+/* =====================================
+   SINGLE ORDER
+===================================== */
+
+function renderOrder(order){
+
+const status =
+order.status || "New";
+
+
+let statusClass = "";
+
+
+if(status === "Accepted"){
+
+statusClass = "accepted";
+
+}
+
+
+if(order.rider){
+
+statusClass = "assigned";
+
+}
+
+
+if(status === "Delivered"){
+
+statusClass = "delivered";
+
+}
+
+
+const riderOptions = `
+
+<option value="">
+Select Rider
+</option>
+
+<option
+value="Rider 1"
+${order.rider === "Rider 1" ? "selected" : ""}
+>
+🛵 Rider 1
+</option>
+
+<option
+value="Rider 2"
+${order.rider === "Rider 2" ? "selected" : ""}
+>
+🛵 Rider 2
+</option>
+
+<option
+value="Rider 3"
+${order.rider === "Rider 3" ? "selected" : ""}
+>
+🛵 Rider 3
+</option>
+
+`;
+
+
+return `
+
+<div class="card">
+
+
+<div class="order-header">
+
+<div class="order-id">
+
+📦 ${escapeHTML(
+order.id || order.key
+)}
+
+</div>
+
+
+<div class="status ${statusClass}">
+
+${escapeHTML(status)}
+
+</div>
+
+</div>
+
+
+
+<div class="small">
+
+${order.createdAt
+?
+new Date(
+order.createdAt
+).toLocaleString()
+:
+""
+}
+
+</div>
+
+
+
+<hr>
+
+
+
+<div class="info">
+
+<b>🛒 Grocery Items</b>
+
+<br><br>
+
+${escapeHTML(
+order.items || "Not provided"
+)}
+
+</div>
+
+
+
+<div class="info">
+
+<b>👤 Customer</b>
+
+<br>
+
+${escapeHTML(
+order.name ||
+order.customerName ||
+"Customer"
+)}
+
+<br><br>
+
+<b>📞 Phone</b>
+
+<br>
+
+${escapeHTML(
+order.phone ||
+"Not provided"
+)}
+
+</div>
+
+
+
+<div class="info">
+
+<b>📍 Pickup</b>
+
+<br><br>
+
+${escapeHTML(
+order.pickup ||
+order.pickupLocation ||
+"Not provided"
+)}
+
+</div>
+
+
+
+<div class="info">
+
+<b>🏠 Delivery</b>
+
+<br><br>
+
+${escapeHTML(
+order.delivery ||
+order.deliveryLocation ||
+"Not provided"
+)}
+
+</div>
+
+
+
+${
+order.note
+?
+
+`
+
+<div class="info">
+
+<b>📝 Delivery Note</b>
+
+<br><br>
+
+${escapeHTML(
+order.note
+)}
+
+</div>
+
+`
+
+:
+
+""
+
+}
+
+
+
+<hr>
+
+
+
+<label>
+
+🛵 Assign Rider
+
+</label>
+
+
+<select
+id="rider-${order.key}"
+>
+
+${riderOptions}
+
+</select>
+
+
+<button
+
+onclick="assignRider(
+'${safe(order.key)}'
+)"
+
+>
+
+✅ Assign Rider
+
+</button>
+
+
+
+${
+order.rider
+?
+
+`
+
+<div class="info">
+
+🛵 Currently assigned to:
+
+<b>
+${escapeHTML(order.rider)}
+</b>
+
+</div>
+
+`
+
+:
+
+""
+
+}
+
+
+
+<button
+
+class="blue"
+
+onclick="acceptOrder(
+'${safe(order.key)}'
+)"
+
+>
+
+✓ Accept Order
+
+</button>
+
+
+
+<button
+
+class="orange"
+
+onclick="markDelivered(
+'${safe(order.key)}'
+)"
+
+>
+
+✅ Mark Delivered
+
+</button>
+
+
+
+<button
+
+class="red"
+
+onclick="cancelOrder(
+'${safe(order.key)}'
+)"
+
+>
+
+❌ Cancel Order
+
+</button>
+
+
+</div>
+
+`;
+
+}
+
+
+
+/* =====================================
+   ASSIGN RIDER
+===================================== */
+
+window.assignRider =
+async function(key){
+
+const select =
+document.getElementById(
+"rider-" + key
+);
+
+
+const rider =
+select.value;
+
+
+if(!rider){
+
+alert(
+"Please select a rider first."
+);
+
+return;
+
+}
+
+
+try{
+
+await update(
+
+ref(
+db,
+"orders/" + key
+),
+
+{
+
+rider:rider,
+
+status:"Rider Assigned"
+
+}
+
+);
+
+
+alert(
+"✅ Order assigned to " + rider
+);
+
+}
+
+catch(error){
+
+console.error(error);
+
+alert(
+"❌ Could not assign rider."
+);
+
+}
+
+};
+
+
+
+/* =====================================
+   ACCEPT
+===================================== */
+
+window.acceptOrder =
+async function(key){
+
+try{
+
+await update(
+
+ref(
+db,
+"orders/" + key
+),
+
+{
+
+status:"Accepted"
+
+}
+
+);
+
+}
+
+catch(error){
+
+console.error(error);
+
+alert(
+"Could not accept order."
+);
+
+}
+
+};
+
+
+
+/* =====================================
+   DELIVERED
+===================================== */
+
+window.markDelivered =
+async function(key){
+
+const confirmDelivery =
+confirm(
+"Mark this order as Delivered?"
+);
+
+
+if(!confirmDelivery){
+
+return;
+
+}
+
+
+try{
+
+await update(
+
+ref(
+db,
+"orders/" + key
+),
+
+{
+
+status:"Delivered"
+
+}
+
+);
+
+
+alert(
+"✅ Order marked as Delivered."
+);
+
+}
+
+catch(error){
+
+console.error(error);
+
+alert(
+"Could not update order."
+);
+
+}
+
+};
+
+
+
+/* =====================================
+   CANCEL
+===================================== */
+
+window.cancelOrder =
+async function(key){
+
+const confirmCancel =
+confirm(
+"Cancel this order?"
+);
+
+
+if(!confirmCancel){
+
+return;
+
+}
+
+
+try{
+
+await update(
+
+ref(
+db,
+"orders/" + key
+),
+
+{
+
+status:"Cancelled"
+
+}
+
+);
+
+
+alert(
+"Order cancelled."
+);
+
+}
+
+catch(error){
+
+console.error(error);
+
+alert(
+"Could not cancel order."
+);
+
+}
+
+};
+
+
+
+/* =====================================
+   SECURITY
+===================================== */
+
+function escapeHTML(value){
+
+return String(
+value ?? ""
+).replace(
+/[&<>'"]/g,
+
+char => ({
+
+"&":"&amp;",
+"<":"&lt;",
+">":"&gt;",
+"'":"&#39;",
+'"':"&quot;"
+
+}[char])
+
+);
+
+}
+
+
+function safe(value){
+
+return String(
+value ?? ""
+)
+
+.replace(
+/\\/g,
+"\\\\"
+)
+
+.replace(
+/'/g,
+"\\'"
+)
+
+.replace(
+/"/g,
+"&quot;"
+)
+
+.replace(
+/\n/g,
+" "
+)
+
+.replace(
+/\r/g,
+" "
+);
+
+}
+
+
+
+/* =====================================
+   START
+===================================== */
+
+loadOrders();
+
+</script>
+
+</body>
+
+</html>

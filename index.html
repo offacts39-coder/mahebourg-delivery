@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+a<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
@@ -127,13 +127,63 @@ const db = getDatabase(app);
 const ordersRef = ref(db, 'orders');
 let liveOrders = [];
 
+let pickupGPS = null;
+let deliveryGPS = null;
+
 function useLocation(id){
-  if(!navigator.geolocation){alert('GPS is not available on this phone.');return}
-  navigator.geolocation.getCurrentPosition(pos=>{
-    const {latitude,longitude}=pos.coords;
-    document.getElementById(id).value=`GPS: ${latitude.toFixed(6)}, ${longitude.toFixed(6)}`;
-  },()=>alert('Could not get your location. Please type the address manually.'),{enableHighAccuracy:true,timeout:10000});
+
+  if(!navigator.geolocation){
+    alert('GPS is not available on this phone.');
+    return;
+  }
+
+  navigator.geolocation.getCurrentPosition(
+    pos => {
+
+      const latitude = pos.coords.latitude;
+      const longitude = pos.coords.longitude;
+
+      const gpsText =
+        `GPS: ${latitude.toFixed(6)}, ${longitude.toFixed(6)}`;
+
+      document.getElementById(id).value = gpsText;
+
+      if(id === 'pickup'){
+        pickupGPS = {
+          latitude: latitude,
+          longitude: longitude
+        };
+      }
+
+      if(id === 'delivery'){
+        deliveryGPS = {
+          latitude: latitude,
+          longitude: longitude
+        };
+      }
+
+    },
+
+    error => {
+
+      console.log(error);
+
+      alert(
+        'Could not get your location. Please allow location permission and try again.'
+      );
+
+    },
+
+    {
+      enableHighAccuracy:true,
+      timeout:15000,
+      maximumAge:0
+    }
+
+  );
 }
+
+window.useLocation = useLocation;
 
 window.useLocation = useLocation;
 
@@ -147,7 +197,33 @@ function placeOrder(){
   if(!items||!pickup||!delivery||!name||!phone){alert('Please fill in items, pickup, delivery location, name and phone.');return}
 
   const orderId='MB-'+Math.floor(100000+Math.random()*900000);
-  const order={id:orderId,items,pickup,delivery,name,phone,note,status:'New',createdAt:new Date().toISOString()};
+  const order={
+  id:orderId,
+
+  items:items,
+
+  pickup:pickup,
+
+  delivery:delivery,
+
+  name:name,
+
+  phone:phone,
+
+  note:note,
+
+  status:'New',
+
+  createdAt:new Date().toISOString(),
+
+  pickupLatitude: pickupGPS ? pickupGPS.latitude : null,
+
+  pickupLongitude: pickupGPS ? pickupGPS.longitude : null,
+
+  deliveryLatitude: deliveryGPS ? deliveryGPS.latitude : null,
+
+  deliveryLongitude: deliveryGPS ? deliveryGPS.longitude : null
+};
 
   push(ordersRef, order).then(()=>{
     document.getElementById('orderId').textContent=orderId;

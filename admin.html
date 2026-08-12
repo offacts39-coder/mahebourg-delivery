@@ -1,56 +1,243 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
+
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="theme-color" content="#111827">
+
+<meta name="viewport"
+content="width=device-width, initial-scale=1.0">
+
+<meta name="theme-color"
+content="#111827">
+
 <title>Mahebourg Delivery Admin</title>
 
 <style>
-*{box-sizing:border-box}
-body{margin:0;font-family:Arial,sans-serif;background:#f3f4f6;color:#17202a}
-header{background:#111827;color:white;padding:20px}
-header h2{margin:0 0 5px}
-header p{margin:0;font-size:13px;opacity:.8}
-main{max-width:700px;margin:auto;padding:15px}
-.card{background:white;border-radius:16px;padding:16px;margin-bottom:14px;box-shadow:0 3px 12px rgba(0,0,0,.08)}
-input,select,button{width:100%;padding:13px;border-radius:10px;border:1px solid #d1d5db;font-size:15px}
-button{border:0;background:#16a34a;color:white;font-weight:bold;margin-top:8px;cursor:pointer}
-.blue{background:#2563eb}.orange{background:#ea580c}.red{background:#dc2626}.gray{background:#4b5563}
-.hidden{display:none}
-.error{color:#dc2626;font-size:14px;margin-top:10px}
-.success{color:#166534;font-size:14px;margin-top:10px}
-.order-header{display:flex;justify-content:space-between;gap:10px;align-items:center}
-.order-id{font-size:18px;font-weight:bold}
-.status{display:inline-block;padding:6px 9px;border-radius:20px;background:#fef3c7;color:#92400e;font-size:11px;font-weight:bold}
-.status.accepted{background:#dcfce7;color:#166534}
-.status.assigned{background:#dbeafe;color:#1d4ed8}
-.status.delivered{background:#dcfce7;color:#166534}
-.info{background:#f8fafc;border-radius:10px;padding:11px;margin:10px 0;line-height:1.55;font-size:14px}
-label{display:block;font-size:13px;font-weight:bold;margin:12px 0 6px}
-.small{font-size:11px;color:#6b7280}
-hr{border:0;border-top:1px solid #e5e7eb;margin:15px 0}
-.topbar{display:flex;gap:8px;margin-bottom:15px}
-.topbar button{margin:0}
-.empty{text-align:center;padding:30px 15px;color:#6b7280}
+
+*{
+box-sizing:border-box;
+}
+
+body{
+margin:0;
+font-family:Arial,sans-serif;
+background:#f3f4f6;
+color:#17202a;
+}
+
+header{
+background:#111827;
+color:white;
+padding:20px;
+}
+
+header h2{
+margin:0 0 5px;
+}
+
+header p{
+margin:0;
+font-size:13px;
+opacity:.8;
+}
+
+main{
+max-width:700px;
+margin:auto;
+padding:15px;
+}
+
+.card{
+background:white;
+border-radius:16px;
+padding:16px;
+margin-bottom:14px;
+box-shadow:0 3px 12px rgba(0,0,0,.08);
+}
+
+input,
+select,
+button{
+width:100%;
+padding:13px;
+border-radius:10px;
+border:1px solid #d1d5db;
+font-size:15px;
+}
+
+input{
+background:white;
+}
+
+button{
+border:0;
+background:#16a34a;
+color:white;
+font-weight:bold;
+margin-top:8px;
+cursor:pointer;
+}
+
+.blue{
+background:#2563eb;
+}
+
+.orange{
+background:#ea580c;
+}
+
+.red{
+background:#dc2626;
+}
+
+.gray{
+background:#4b5563;
+}
+
+.hidden{
+display:none;
+}
+
+.error{
+background:#fee2e2;
+color:#991b1b;
+padding:12px;
+border-radius:10px;
+margin-top:10px;
+font-size:13px;
+line-height:1.5;
+word-break:break-word;
+}
+
+.success{
+background:#dcfce7;
+color:#166534;
+padding:12px;
+border-radius:10px;
+margin-top:10px;
+}
+
+.loading{
+text-align:center;
+padding:20px;
+}
+
+.order-header{
+display:flex;
+justify-content:space-between;
+align-items:center;
+gap:10px;
+}
+
+.order-id{
+font-size:18px;
+font-weight:bold;
+}
+
+.status{
+display:inline-block;
+padding:6px 9px;
+border-radius:20px;
+background:#fef3c7;
+color:#92400e;
+font-size:11px;
+font-weight:bold;
+}
+
+.status.accepted{
+background:#dcfce7;
+color:#166534;
+}
+
+.status.assigned{
+background:#dbeafe;
+color:#1d4ed8;
+}
+
+.status.delivered{
+background:#dcfce7;
+color:#166534;
+}
+
+.info{
+background:#f8fafc;
+border-radius:10px;
+padding:11px;
+margin:10px 0;
+line-height:1.55;
+font-size:14px;
+}
+
+label{
+display:block;
+font-size:13px;
+font-weight:bold;
+margin:12px 0 6px;
+}
+
+.small{
+font-size:11px;
+color:#6b7280;
+}
+
+hr{
+border:0;
+border-top:1px solid #e5e7eb;
+margin:15px 0;
+}
+
+.topbar{
+display:flex;
+gap:8px;
+margin-bottom:15px;
+}
+
+.topbar button{
+margin:0;
+}
+
+.empty{
+text-align:center;
+padding:30px 15px;
+color:#6b7280;
+}
+
 </style>
+
 </head>
+
 
 <body>
 
+
 <header>
+
 <h2>👨‍💼 Mahebourg Delivery</h2>
+
 <p>Admin Dashboard • Secure Login</p>
+
 </header>
+
 
 <main>
 
-<!-- LOGIN -->
-<div id="loginCard" class="card">
+
+<!-- =========================
+     LOGIN
+========================= -->
+
+<div
+id="loginCard"
+class="card"
+>
 
 <h3>🔐 Admin Login</h3>
 
-<label>Email</label>
+
+<label for="email">
+Email
+</label>
 
 <input
 id="email"
@@ -59,7 +246,10 @@ placeholder="Admin email"
 autocomplete="email"
 >
 
-<label>Password</label>
+
+<label for="password">
+Password
+</label>
 
 <input
 id="password"
@@ -68,74 +258,144 @@ placeholder="Password"
 autocomplete="current-password"
 >
 
-<button onclick="loginAdmin()">
+
+<button
+onclick="loginAdmin()"
+>
+
 🔐 Login
+
 </button>
 
-<div id="loginMessage"></div>
+
+<div
+id="loginMessage"
+></div>
 
 </div>
 
 
-<!-- ADMIN APP -->
-<div id="adminApp" class="hidden">
+
+<!-- =========================
+     ADMIN DASHBOARD
+========================= -->
+
+<div
+id="adminApp"
+class="hidden"
+>
+
 
 <div class="card">
 
-<h3>📊 Dashboard</h3>
+<h3>
+📊 Dashboard
+</h3>
+
 
 <div id="summary">
 Loading...
 </div>
 
+
+<div class="topbar">
+
 <button
 class="blue"
 onclick="loadOrders()"
 >
-🔄 Refresh Orders
+
+🔄 Refresh
+
 </button>
+
 
 <button
 class="gray"
 onclick="logoutAdmin()"
 >
+
 🚪 Logout
+
 </button>
 
 </div>
 
-<div id="orders"></div>
+</div>
+
+
+
+<div id="orders">
+
+<div class="loading">
+
+Loading orders...
 
 </div>
+
+</div>
+
+
+</div>
+
 
 </main>
 
 
+
 <script type="module">
 
-import {
-initializeApp
-}
-from
-"https://www.gstatic.com/firebasejs/12.1.0/firebase-app.js";
+
+/* ==========================================
+   FIREBASE IMPORTS
+========================================== */
+
 
 import {
+
+initializeApp
+
+}
+
+from
+
+"https://www.gstatic.com/firebasejs/12.1.0/firebase-app.js";
+
+
+
+import {
+
 getDatabase,
 ref,
 onValue,
 update
+
 }
+
 from
+
 "https://www.gstatic.com/firebasejs/12.1.0/firebase-database.js";
 
+
+
 import {
+
 getAuth,
 signInWithEmailAndPassword,
 onAuthStateChanged,
 signOut
+
 }
+
 from
+
 "https://www.gstatic.com/firebasejs/12.1.0/firebase-auth.js";
+
+
+
+/* ==========================================
+   FIREBASE CONFIG
+========================================== */
 
 
 const firebaseConfig = {
@@ -164,87 +424,173 @@ appId:
 };
 
 
+
+/* ==========================================
+   INITIALIZE
+========================================== */
+
+
 const app =
 initializeApp(firebaseConfig);
+
 
 const db =
 getDatabase(app);
 
+
 const auth =
 getAuth(app);
+
 
 const ordersRef =
 ref(db,"orders");
 
+
 let allOrders = [];
+
 
 let unsubscribeOrders = null;
 
 
-/* LOGIN */
+
+/* ==========================================
+   ADMIN LOGIN
+========================================== */
+
 
 window.loginAdmin = async function(){
 
 const email =
-document.getElementById("email").value.trim();
+document
+.getElementById("email")
+.value
+.trim();
+
 
 const password =
-document.getElementById("password").value;
+document
+.getElementById("password")
+.value;
 
 
 const message =
-document.getElementById("loginMessage");
+document
+.getElementById("loginMessage");
 
+
+
+/* CHECK INPUT */
 
 if(!email || !password){
 
-message.className="error";
-message.textContent=
-"Please enter email and password.";
+message.className =
+"error";
+
+message.innerHTML =
+"❌ Please enter your email and password.";
 
 return;
 
 }
 
 
-message.className="";
-message.textContent="Logging in...";
+
+message.className =
+"";
+
+message.innerHTML =
+"⏳ Logging in...";
+
 
 
 try{
 
+
 await signInWithEmailAndPassword(
+
 auth,
+
 email,
+
 password
+
 );
 
-}catch(error){
 
-console.error("FIREBASE LOGIN ERROR:", error);
-
-message.className="error";
+message.className =
+"success";
 
 message.innerHTML =
-"❌ Error: " +
-error.code +
-"<br>" +
-(error.message || "");
+"✅ Login successful!";
+
+
+}
+
+catch(error){
+
+
+console.error(
+"FIREBASE LOGIN ERROR:",
+error
+);
+
+
+
+/* SHOW EXACT FIREBASE ERROR */
+
+message.className =
+"error";
+
+
+message.innerHTML =
+
+"❌ <b>Firebase Login Error</b><br><br>" +
+
+"<b>Error code:</b><br>" +
+
+escapeHTML(
+error.code || "Unknown"
+) +
+
+"<br><br>" +
+
+"<b>Message:</b><br>" +
+
+escapeHTML(
+error.message || "Unknown error"
+) +
+
+"<br><br>" +
+
+"<span class='small'>" +
+
+"Do not send your password. Send only the error code to me."
+
++
+
+"</span>";
 
 }
 
 };
 
 
-/* LOGOUT */
 
-window.logoutAdmin = async function(){
+/* ==========================================
+   LOGOUT
+========================================== */
+
+
+window.logoutAdmin =
+async function(){
 
 try{
 
 await signOut(auth);
 
-}catch(error){
+}
+
+catch(error){
 
 console.error(error);
 
@@ -253,42 +599,70 @@ console.error(error);
 };
 
 
-/* AUTH STATE */
+
+/* ==========================================
+   AUTH STATE
+========================================== */
+
 
 onAuthStateChanged(
+
 auth,
+
 user=>{
+
 
 if(user){
 
-document.getElementById(
-"loginCard"
-).classList.add("hidden");
 
-document.getElementById(
-"adminApp"
-).classList.remove("hidden");
+document
+.getElementById("loginCard")
+.classList
+.add("hidden");
+
+
+document
+.getElementById("adminApp")
+.classList
+.remove("hidden");
+
 
 loadOrders();
 
-}else{
-
-document.getElementById(
-"loginCard"
-).classList.remove("hidden");
-
-document.getElementById(
-"adminApp"
-).classList.add("hidden");
 
 }
 
-});
+else{
 
 
-/* LOAD ORDERS */
+document
+.getElementById("loginCard")
+.classList
+.remove("hidden");
 
-window.loadOrders = function(){
+
+document
+.getElementById("adminApp")
+.classList
+.add("hidden");
+
+
+}
+
+}
+
+);
+
+
+
+/* ==========================================
+   LOAD ORDERS
+========================================== */
+
+
+window.loadOrders =
+function(){
+
 
 if(!auth.currentUser){
 
@@ -296,55 +670,91 @@ return;
 
 }
 
+
 if(unsubscribeOrders){
 
 unsubscribeOrders();
 
 }
 
+
+
 unsubscribeOrders =
+
 onValue(
 
 ordersRef,
 
 snapshot=>{
 
+
 const data =
 snapshot.val() || {};
 
+
 allOrders =
+
 Object.entries(data)
+
 .map(
+
 ([key,order])=>({
+
 key:key,
+
 ...order
+
 })
+
 )
+
+
 .sort(
+
 (a,b)=>
-new Date(b.createdAt || 0)
+
+new Date(
+b.createdAt || 0
+)
+
 -
-new Date(a.createdAt || 0)
+
+new Date(
+a.createdAt || 0
+)
+
 );
 
-renderOrders(allOrders);
+
+renderOrders(
+allOrders
+);
+
 
 },
 
 error=>{
 
-console.error(error);
 
-document.getElementById(
-"orders"
-).innerHTML=`
+console.error(
+"FIREBASE DATABASE ERROR:",
+error
+);
+
+
+document
+.getElementById("orders")
+.innerHTML = `
 
 <div class="card">
 
-<h3>❌ Database access denied</h3>
+<h3>❌ Database Error</h3>
 
 <p>
-Firebase Database Rules may need to be updated.
+${escapeHTML(
+error.message ||
+"Could not load orders."
+)}
 </p>
 
 </div>
@@ -358,58 +768,94 @@ Firebase Database Rules may need to be updated.
 };
 
 
-/* RENDER */
+
+/* ==========================================
+   RENDER ORDERS
+========================================== */
+
 
 function renderOrders(orders){
 
+
 const container =
-document.getElementById("orders");
+document.getElementById(
+"orders"
+);
+
 
 const newCount =
+
 orders.filter(
-o=>!o.status || o.status==="New"
+
+o=>
+!o.status ||
+o.status==="New"
+
 ).length;
+
+
 
 const assignedCount =
+
 orders.filter(
-o=>o.rider
+
+o=>
+o.rider
+
 ).length;
 
+
+
 const deliveredCount =
+
 orders.filter(
-o=>o.status==="Delivered"
+
+o=>
+o.status==="Delivered"
+
 ).length;
+
+
 
 document.getElementById(
 "summary"
-).innerHTML=`
+).innerHTML = `
 
-<b>📦 Total:</b> ${orders.length}
+<b>📦 Total:</b>
+${orders.length}
 
 &nbsp;&nbsp;
 
-<b>🆕 New:</b> ${newCount}
+<b>🆕 New:</b>
+${newCount}
 
 <br><br>
 
-<b>🛵 Assigned:</b> ${assignedCount}
+<b>🛵 Assigned:</b>
+${assignedCount}
 
 &nbsp;&nbsp;
 
-<b>✅ Delivered:</b> ${deliveredCount}
+<b>✅ Delivered:</b>
+${deliveredCount}
 
 `;
 
 
+
 if(!orders.length){
 
-container.innerHTML=`
+container.innerHTML = `
 
 <div class="card empty">
 
-<h3>No orders yet</h3>
+<h3>
+No orders yet
+</h3>
 
-<p>Customer orders will appear here.</p>
+<p>
+Customer orders will appear here.
+</p>
 
 </div>
 
@@ -420,204 +866,436 @@ return;
 }
 
 
+
 container.innerHTML =
-orders.map(renderOrder).join("");
+
+orders
+.map(
+renderOrder
+)
+.join("");
 
 }
 
 
-/* ORDER CARD */
+
+/* ==========================================
+   RENDER ONE ORDER
+========================================== */
+
 
 function renderOrder(order){
+
 
 const status =
 order.status || "New";
 
-let statusClass="";
+
+let statusClass =
+"";
+
 
 if(status==="Accepted"){
-statusClass="accepted";
+
+statusClass =
+"accepted";
+
 }
+
 
 if(order.rider){
-statusClass="assigned";
+
+statusClass =
+"assigned";
+
 }
 
+
 if(status==="Delivered"){
-statusClass="delivered";
+
+statusClass =
+"delivered";
+
 }
+
 
 
 return `
 
 <div class="card">
 
+
 <div class="order-header">
 
+
 <div class="order-id">
-📦 ${escapeHTML(order.id || order.key)}
+
+📦
+
+${escapeHTML(
+order.id ||
+order.key
+)}
+
 </div>
 
-<div class="status ${statusClass}">
-${escapeHTML(status)}
-</div>
+
+<div
+class="status ${statusClass}"
+>
+
+${escapeHTML(
+status
+)}
 
 </div>
+
+
+</div>
+
+
 
 <div class="small">
+
 ${
 order.createdAt
+
 ?
-new Date(order.createdAt).toLocaleString()
+
+new Date(
+order.createdAt
+)
+.toLocaleString()
+
 :
+
 ""
+
 }
+
 </div>
+
+
 
 <hr>
 
+
+
 <div class="info">
 
-<b>🛒 Grocery Items</b>
+<b>
+🛒 Grocery Items
+</b>
 
 <br><br>
 
-${escapeHTML(order.items || "Not provided")}
+${escapeHTML(
+order.items ||
+"Not provided"
+)}
 
 </div>
 
+
+
 <div class="info">
 
-<b>👤 Customer</b>
+<b>
+👤 Customer
+</b>
 
 <br>
 
 ${escapeHTML(
+
 order.name ||
 order.customerName ||
 "Customer"
+
 )}
+
 
 <br><br>
 
-<b>📞 Phone</b>
+
+<b>
+📞 Phone
+</b>
 
 <br>
 
-${escapeHTML(order.phone || "Not provided")}
+${escapeHTML(
+
+order.phone ||
+"Not provided"
+
+)}
 
 </div>
 
+
+
 <div class="info">
 
-<b>📍 Pickup</b>
+<b>
+📍 Pickup
+</b>
 
 <br><br>
 
 ${escapeHTML(
+
 order.pickup ||
 order.pickupLocation ||
 "Not provided"
+
 )}
 
 </div>
 
+
+
 <div class="info">
 
-<b>🏠 Delivery</b>
+<b>
+🏠 Delivery
+</b>
 
 <br><br>
 
 ${escapeHTML(
+
 order.delivery ||
 order.deliveryLocation ||
 "Not provided"
+
 )}
 
 </div>
 
+
+
 ${
 order.note
+
 ?
+
 `
+
 <div class="info">
-<b>📝 Note</b>
+
+<b>
+📝 Delivery Note
+</b>
+
 <br><br>
-${escapeHTML(order.note)}
+
+${escapeHTML(
+order.note
+)}
+
 </div>
+
 `
+
 :
+
 ""
+
 }
+
+
 
 <hr>
 
+
+
 <label>
+
 🛵 Assign Rider
+
 </label>
 
-<select id="rider-${order.key}">
+
+
+<select
+id="rider-${safe(order.key)}"
+>
+
 
 <option value="">
+
 Select Rider
+
 </option>
 
-<option value="Rider 1"
-${order.rider==="Rider 1"?"selected":""}>
+
+
+<option
+value="Rider 1"
+
+${
+
+order.rider==="Rider 1"
+
+?
+
+"selected"
+
+:
+
+""
+
+}
+
+>
+
 🛵 Rider 1
+
 </option>
 
-<option value="Rider 2"
-${order.rider==="Rider 2"?"selected":""}>
+
+
+<option
+value="Rider 2"
+
+${
+
+order.rider==="Rider 2"
+
+?
+
+"selected"
+
+:
+
+""
+
+}
+
+>
+
 🛵 Rider 2
+
 </option>
 
-<option value="Rider 3"
-${order.rider==="Rider 3"?"selected":""}>
+
+
+<option
+value="Rider 3"
+
+${
+
+order.rider==="Rider 3"
+
+?
+
+"selected"
+
+:
+
+""
+
+}
+
+>
+
 🛵 Rider 3
+
 </option>
+
 
 </select>
 
+
+
 <button
-onclick="assignRider('${safe(order.key)}')"
+
+onclick=
+"assignRider('${safe(order.key)}')"
+
 >
+
 ✅ Assign Rider
+
 </button>
+
+
 
 ${
 order.rider
+
 ?
+
 `
+
 <div class="info">
-🛵 Assigned to:
-<b>${escapeHTML(order.rider)}</b>
+
+🛵 Currently assigned to:
+
+<b>
+
+${escapeHTML(
+order.rider
+)}
+
+</b>
+
 </div>
+
 `
+
 :
+
 ""
+
 }
 
+
+
 <button
+
 class="blue"
-onclick="acceptOrder('${safe(order.key)}')"
+
+onclick=
+"acceptOrder('${safe(order.key)}')"
+
 >
+
 ✓ Accept Order
+
 </button>
 
+
+
 <button
+
 class="orange"
-onclick="markDelivered('${safe(order.key)}')"
+
+onclick=
+"markDelivered('${safe(order.key)}')"
+
 >
+
 ✅ Mark Delivered
+
 </button>
 
+
+
 <button
+
 class="red"
-onclick="cancelOrder('${safe(order.key)}')"
+
+onclick=
+"cancelOrder('${safe(order.key)}')"
+
 >
+
 ❌ Cancel Order
+
 </button>
+
 
 </div>
 
@@ -626,26 +1304,43 @@ onclick="cancelOrder('${safe(order.key)}')"
 }
 
 
-/* ASSIGN */
+
+/* ==========================================
+   ASSIGN RIDER
+========================================== */
+
 
 window.assignRider =
+
 async function(key){
+
 
 if(!auth.currentUser){
 
-alert("Please login first.");
+alert(
+"Please login first."
+);
 
 return;
 
 }
 
+
+
 const select =
+
 document.getElementById(
-"rider-"+key
+
+"rider-" + key
+
 );
+
+
 
 const rider =
 select.value;
+
+
 
 if(!rider){
 
@@ -657,26 +1352,46 @@ return;
 
 }
 
+
+
 try{
 
+
 await update(
-ref(db,"orders/"+key),
+
+ref(
+db,
+"orders/" + key
+),
+
 {
-rider:rider,
-status:"Rider Assigned"
+
+rider:
+rider,
+
+status:
+"Rider Assigned"
+
 }
+
 );
+
 
 alert(
-"✅ Order assigned to "+rider
+"✅ Order assigned to " +
+rider
 );
 
-}catch(error){
+
+}
+
+catch(error){
 
 console.error(error);
 
 alert(
-"❌ Could not assign rider."
+"❌ Could not assign rider.\n\n" +
+error.message
 );
 
 }
@@ -684,26 +1399,45 @@ alert(
 };
 
 
-/* ACCEPT */
+
+/* ==========================================
+   ACCEPT ORDER
+========================================== */
+
 
 window.acceptOrder =
+
 async function(key){
 
 try{
 
+
 await update(
-ref(db,"orders/"+key),
+
+ref(
+db,
+"orders/" + key
+),
+
 {
-status:"Accepted"
+
+status:
+"Accepted"
+
 }
+
 );
 
-}catch(error){
+
+}
+
+catch(error){
 
 console.error(error);
 
 alert(
-"Could not accept order."
+"Could not accept order.\n\n" +
+error.message
 );
 
 }
@@ -711,34 +1445,58 @@ alert(
 };
 
 
-/* DELIVERED */
+
+/* ==========================================
+   DELIVERED
+========================================== */
+
 
 window.markDelivered =
+
 async function(key){
 
-if(!confirm(
+
+if(
+!confirm(
 "Mark this order as Delivered?"
-)){
+)
+){
 
 return;
 
 }
 
+
+
 try{
 
+
 await update(
-ref(db,"orders/"+key),
+
+ref(
+db,
+"orders/" + key
+),
+
 {
-status:"Delivered"
+
+status:
+"Delivered"
+
 }
+
 );
 
-}catch(error){
+
+}
+
+catch(error){
 
 console.error(error);
 
 alert(
-"Could not update order."
+"Could not update order.\n\n" +
+error.message
 );
 
 }
@@ -746,34 +1504,58 @@ alert(
 };
 
 
-/* CANCEL */
+
+/* ==========================================
+   CANCEL
+========================================== */
+
 
 window.cancelOrder =
+
 async function(key){
 
-if(!confirm(
+
+if(
+!confirm(
 "Cancel this order?"
-)){
+)
+){
 
 return;
 
 }
 
+
+
 try{
 
+
 await update(
-ref(db,"orders/"+key),
+
+ref(
+db,
+"orders/" + key
+),
+
 {
-status:"Cancelled"
+
+status:
+"Cancelled"
+
 }
+
 );
 
-}catch(error){
+
+}
+
+catch(error){
 
 console.error(error);
 
 alert(
-"Could not cancel order."
+"Could not cancel order.\n\n" +
+error.message
 );
 
 }
@@ -781,38 +1563,81 @@ alert(
 };
 
 
-/* SECURITY HELPERS */
+
+/* ==========================================
+   HTML SECURITY
+========================================== */
+
 
 function escapeHTML(value){
 
-return String(value ?? "")
+return String(
+value ?? ""
+)
+
 .replace(
 /[&<>'"]/g,
+
 char=>({
 
-"&":"&amp;",
-"<":"&lt;",
-">":"&gt;",
-"'":"&#39;",
-'"':"&quot;"
+"&":
+"&amp;",
+
+"<":
+"&lt;",
+
+">":
+"&gt;",
+
+"'":
+"&#39;",
+
+'"':
+"&quot;"
 
 }[char])
+
 );
 
 }
 
+
+
 function safe(value){
 
-return String(value ?? "")
-.replace(/\\/g,"\\\\")
-.replace(/'/g,"\\'")
-.replace(/"/g,"&quot;")
-.replace(/\n/g," ")
-.replace(/\r/g," ");
+return String(
+value ?? ""
+)
+
+.replace(
+/\\/g,
+"\\\\"
+)
+
+.replace(
+/'/g,
+"\\'"
+)
+
+.replace(
+/"/g,
+"&quot;"
+)
+
+.replace(
+/\n/g,
+" "
+)
+
+.replace(
+/\r/g,
+" "
+);
 
 }
 
 </script>
 
 </body>
+
 </html>
